@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ENEM do Milhão · ENEM 2026, 1º dia, Caderno Azul</title>
+<style>
+:root{
+  --noite:#070b24; --azul:#0d1650; --azul2:#1a2a8a; --borda:#5d74ff;
+  --ouro:#f6c445; --ouro2:#ffe9a6; --texto:#eef1ff; --suave:#aab3e6;
+  --ok:#1faa59; --erro:#d93a4a; --sel:#f08a1c;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  color:var(--texto); background:var(--noite); min-height:100vh;
+  background-image:
+    radial-gradient(60vw 40vh at 15% -5%, rgba(93,116,255,.35), transparent 70%),
+    radial-gradient(60vw 40vh at 85% -5%, rgba(160,80,255,.28), transparent 70%),
+    radial-gradient(90vw 50vh at 50% 110%, rgba(40,70,220,.35), transparent 70%);
+  background-attachment:fixed;
+}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(--ouro2);outline-offset:2px}
+.oculto{display:none!important}
+.wrap{max-width:1180px;margin:0 auto;padding:14px}
+
+/* ---------- abertura ---------- */
+#inicio{max-width:720px;margin:0 auto;padding:28px 16px 40px;text-align:center}
+.marca{display:inline-block;margin:10px 0 4px;padding:26px 34px;border-radius:50%;
+  border:3px solid var(--ouro);box-shadow:0 0 0 6px rgba(246,196,69,.15),0 0 60px rgba(93,116,255,.6), inset 0 0 40px rgba(93,116,255,.5);
+  background:radial-gradient(circle at 50% 35%, #2b3fc0, #0b1247 70%)}
+.marca small{display:block;letter-spacing:.35em;font-size:.8rem;color:var(--ouro2)}
+.marca strong{display:block;font-size:clamp(2rem,7vw,3.2rem);line-height:1;color:var(--ouro);
+  text-shadow:0 2px 0 #7a5200,0 0 24px rgba(246,196,69,.5);font-weight:900;letter-spacing:.02em}
+#inicio h1{font-size:1.05rem;font-weight:500;color:var(--suave);margin:18px 0 22px}
+.painel{background:rgba(13,22,80,.75);border:1px solid rgba(93,116,255,.5);border-radius:16px;padding:18px;text-align:left;margin-bottom:14px}
+.painel h2{margin:0 0 10px;font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ouro2)}
+.opcoes{display:flex;flex-wrap:wrap;gap:8px}
+.opcoes label{flex:1 1 150px;position:relative}
+.opcoes input{position:absolute;opacity:0}
+.opcoes span{display:block;padding:11px 12px;border-radius:10px;border:2px solid rgba(93,116,255,.5);text-align:center;background:rgba(7,11,36,.6)}
+.opcoes input:checked+span{border-color:var(--ouro);background:rgba(246,196,69,.14);color:var(--ouro2);font-weight:700}
+.opcoes input:focus-visible+span{outline:3px solid var(--ouro2);outline-offset:2px}
+.campo{width:100%;padding:11px 12px;border-radius:10px;border:2px solid rgba(93,116,255,.5);background:rgba(7,11,36,.6);color:var(--texto);font:inherit}
+.regras{margin:0;padding-left:18px;color:var(--suave);font-size:.93rem;line-height:1.5}
+.btn-ouro{display:inline-block;border:0;border-radius:999px;padding:14px 34px;font-weight:800;font-size:1.05rem;color:#3a2600;
+  background:linear-gradient(#ffe9a6,#f6c445 55%,#d89a17);box-shadow:0 6px 0 #8a5d05,0 10px 30px rgba(246,196,69,.35)}
+.btn-ouro:active{transform:translateY(3px);box-shadow:0 3px 0 #8a5d05}
+.btn-linha{border:2px solid rgba(93,116,255,.7);background:rgba(13,22,80,.8);border-radius:999px;padding:9px 16px}
+.btn-linha:hover{border-color:var(--ouro)}
+
+/* ---------- jogo ---------- */
+.topo{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.topo .tit{font-weight:900;color:var(--ouro);letter-spacing:.04em}
+.topo .info{flex:1;color:var(--suave);font-size:.92rem}
+.topo .info b{color:var(--texto)}
+.grade{display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:16px;align-items:start}
+.grade>*{min-width:0}
+.cartao{background:#fff;border-radius:14px;padding:12px;box-shadow:0 0 0 2px rgba(93,116,255,.6),0 12px 40px rgba(0,0,0,.5)}
+.cartao .faixa{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px;color:#1b2468;font-size:.86rem}
+.cartao .faixa b{background:#1b2468;color:#fff;border-radius:6px;padding:3px 8px}
+.cartao .faixa button{margin-left:auto;border:1px solid #1b2468;background:#fff;color:#1b2468;border-radius:6px;padding:4px 10px;font-size:.84rem}
+.apoio{display:block;width:100%;margin:0 0 10px;padding:11px;border-radius:10px;border:2px dashed #1b2468;background:#eef1ff;color:#1b2468;font-weight:700}
+.rolagem{overflow-x:auto}
+.rolagem img{display:block;width:100%;height:auto;margin:0 auto;max-width:820px}
+.rolagem.zoom img{width:170%;max-width:none}
+.mesa{position:sticky;bottom:0;margin-top:12px;padding:10px 8px 12px;border-radius:16px 16px 0 0;
+  background:linear-gradient(rgba(7,11,36,.82),rgba(7,11,36,.97));backdrop-filter:blur(6px);border-top:1px solid rgba(93,116,255,.5)}
+.alts{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.alt{position:relative;border:0;background:var(--borda);padding:0;height:52px;font-weight:900;font-size:1.25rem;
+  clip-path:polygon(16px 0,calc(100% - 16px) 0,100% 50%,calc(100% - 16px) 100%,16px 100%,0 50%)}
+.alt::before{content:"";position:absolute;inset:2px;background:linear-gradient(#18247a,#0a1040);
+  clip-path:polygon(15px 0,calc(100% - 15px) 0,100% 50%,calc(100% - 15px) 100%,15px 100%,0 50%)}
+.alt span{position:relative;color:var(--ouro)}
+.alt:hover:not(:disabled)::before{background:linear-gradient(#2638b0,#101a66)}
+.alt.sel{background:#fff}.alt.sel::before{background:linear-gradient(#ffb04d,#e0730a)}.alt.sel span{color:#2a1500}
+.alt.ok{background:#fff}.alt.ok::before{background:linear-gradient(#35d07a,#128a43)}.alt.ok span{color:#fff}
+.alt.bad{background:#fff}.alt.bad::before{background:linear-gradient(#f0606e,#a81c2b)}.alt.bad span{color:#fff}
+.alt.out{opacity:.28}.alt.out span{text-decoration:line-through}
+.alt:disabled{cursor:default}
+.alt.pisca::before{animation:pisca .5s steps(2) infinite}
+@keyframes pisca{50%{filter:brightness(1.6)}}
+.confirma{display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap;margin-top:10px;min-height:44px}
+.confirma p{margin:0;font-weight:700}
+.ajudas{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:10px}
+.ajuda{border:2px solid var(--borda);background:radial-gradient(circle at 50% 30%,#22349c,#0a1040);border-radius:999px;padding:8px 14px;font-size:.9rem;font-weight:600}
+.ajuda:hover:not(:disabled){border-color:var(--ouro)}
+.ajuda:disabled{opacity:.35;text-decoration:line-through;cursor:default}
+.parar{border-color:rgba(246,196,69,.7);color:var(--ouro2)}
+.status{text-align:center;color:var(--suave);font-size:.9rem;margin:8px 0 0;min-height:1.2em}
+
+.escada{position:sticky;top:12px;background:rgba(13,22,80,.8);border:1px solid rgba(93,116,255,.5);border-radius:14px;padding:10px}
+.escada h2{margin:2px 0 8px;font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ouro2);text-align:center}
+.escada ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column-reverse;gap:3px}
+.escada li{display:flex;gap:8px;padding:5px 10px;border-radius:999px;font-size:.92rem;color:var(--suave);font-variant-numeric:tabular-nums}
+.escada li i{font-style:normal;width:1.6em;text-align:right;opacity:.7}
+.escada li.seguro{color:#fff;font-weight:700}
+.escada li.seguro::after{content:"◆ garantido";margin-left:auto;font-size:.7rem;font-weight:500;color:var(--ouro2);align-self:center}
+.escada li.feito{color:var(--ouro)}
+.escada li.feito i::before{content:"✓ "}
+.escada li.atual{background:linear-gradient(#ffb04d,#e0730a);color:#2a1500;font-weight:800}
+.escada li.atual::after{color:#2a1500}
+
+/* ---------- janelas ---------- */
+dialog{border:2px solid var(--borda);border-radius:18px;background:linear-gradient(#131e6e,#080d33);color:var(--texto);
+  padding:20px;width:min(560px,94vw);max-height:92vh;overflow:auto;box-shadow:0 0 80px rgba(93,116,255,.5)}
+dialog::backdrop{background:rgba(3,5,20,.78)}
+dialog h2{margin:0 0 6px;color:var(--ouro);font-size:1.25rem}
+dialog p{line-height:1.5}
+dialog .nota{color:var(--suave);font-size:.84rem}
+dialog .rodape{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:14px}
+dialog.largo{width:min(980px,96vw);background:#fff;color:#111}
+dialog.largo h2{color:#1b2468}
+dialog.largo img{width:100%;height:auto;display:block}
+dialog.largo .btn-linha{color:#fff}
+.unis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0}
+.uni{text-align:center;background:rgba(7,11,36,.6);border:1px solid rgba(93,116,255,.5);border-radius:12px;padding:12px 6px}
+.uni .rosto{width:54px;height:54px;border-radius:50%;margin:0 auto 6px;display:grid;place-items:center;font-weight:800;background:linear-gradient(#5d74ff,#2a3bb5)}
+.uni small{display:block;color:var(--suave)}
+.placa{margin:10px auto 0;width:58px;height:58px;border-radius:10px;display:grid;place-items:center;font-size:1.7rem;font-weight:900;
+  background:#0a1040;border:2px dashed rgba(170,179,230,.5);color:transparent}
+.placa.sobe{background:linear-gradient(#ffe9a6,#f6c445);color:#3a2600;border:2px solid #fff;animation:sobe .35s ease-out}
+@keyframes sobe{from{transform:translateY(16px) scale(.8);opacity:0}}
+.fone{display:flex;align-items:center;gap:12px;margin:8px 0 12px}
+.fone .ico{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;font-size:1.5rem;background:linear-gradient(#35d07a,#128a43)}
+.fone .ico.toca{animation:toca .35s linear infinite alternate}
+@keyframes toca{from{transform:rotate(-12deg)}to{transform:rotate(12deg)}}
+.tempo{height:8px;border-radius:99px;background:rgba(255,255,255,.15);overflow:hidden;margin-bottom:12px}
+.tempo div{height:100%;width:100%;background:var(--ouro);transform-origin:left}
+.falas{display:flex;flex-direction:column;gap:8px;min-height:150px}
+.fala{max-width:85%;padding:9px 13px;border-radius:14px;line-height:1.4}
+.fala.eu{align-self:flex-end;background:#2a3bb5;border-bottom-right-radius:4px}
+.fala.el{align-self:flex-start;background:#0a1040;border:1px solid rgba(93,116,255,.6);border-bottom-left-radius:4px}
+.barras{display:flex;gap:10px;align-items:flex-end;height:190px;margin:16px 0 4px}
+.barra{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%;gap:4px}
+.barra .col{width:100%;max-width:64px;background:linear-gradient(#ffe9a6,#d89a17);border-radius:6px 6px 0 0;height:0;transition:height .9s ease-out}
+.barra b{font-size:1.1rem}.barra span{font-variant-numeric:tabular-nums;font-size:.9rem}
+.barra.fora{opacity:.3}
+.premio{font-size:clamp(1.8rem,7vw,2.8rem);font-weight:900;color:var(--ouro);margin:6px 0;text-shadow:0 0 24px rgba(246,196,69,.5)}
+
+/* ---------- fim ---------- */
+#fim{max-width:760px;margin:0 auto;padding:28px 16px 40px;text-align:center}
+#fim table{width:100%;border-collapse:collapse;margin-top:8px;text-align:left;font-size:.95rem}
+#fim th,#fim td{padding:8px 6px;border-bottom:1px solid rgba(93,116,255,.3)}
+#fim th{color:var(--ouro2);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase}
+#fim td button{padding:4px 12px;font-size:.85rem}
+.certo{color:#6fe3a2;font-weight:700}.errado{color:#ff8f9a;font-weight:700}
+footer{max-width:900px;margin:26px auto 0;padding:14px 16px 30px;color:var(--suave);font-size:.8rem;line-height:1.5;text-align:center}
+
+@media (max-width:860px){
+  .grade{grid-template-columns:1fr}
+  .escada{position:static;order:-1;padding:8px}
+  .escada h2{display:none}
+  .escada ol{flex-direction:row;overflow-x:auto;gap:4px}
+  .escada li{white-space:nowrap;font-size:.8rem;padding:4px 9px}
+  .escada li.seguro::after{content:"◆";margin-left:2px}
+  .alt{height:48px}
+  .ajuda{padding:7px 11px;font-size:.84rem}
+  .wrap{padding:10px 8px}
+  .topo .info{flex-basis:100%;order:3}
+  .confirma{min-height:0;margin-top:8px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<!-- ================= ABERTURA ================= -->
+<section id="inicio">
+  <div class="marca"><small>ENEM 2026</small><strong>ENEM DO<br>MILHÃO</strong></div>
+  <h1>Jogo de perguntas com as questões do 1º dia do ENEM 2026, Caderno 1 Azul:<br>Linguagens e Ciências Humanas</h1>
+
+  <div class="painel">
+    <h2>Área</h2>
+    <div class="opcoes" id="opArea">
+      <label><input type="radio" name="area" value="L"><span>Linguagens</span></label>
+      <label><input type="radio" name="area" value="H"><span>Ciências Humanas</span></label>
+      <label><input type="radio" name="area" value="LH" checked><span>As duas misturadas</span></label>
+    </div>
+  </div>
+  <div class="painel">
+    <h2>Língua estrangeira</h2>
+    <div class="opcoes">
+      <label><input type="radio" name="lingua" value="I" checked><span>Inglês</span></label>
+      <label><input type="radio" name="lingua" value="E"><span>Espanhol</span></label>
+    </div>
+  </div>
+  <div class="painel">
+    <h2>Para quem você liga na hora do aperto?</h2>
+    <input class="campo" id="amigo" maxlength="24" placeholder="Nome do amigo ou da amiga (opcional)" autocomplete="off">
+  </div>
+  <div class="painel">
+    <h2>Como funciona</h2>
+    <ul class="regras">
+      <li>São 15 perguntas sorteadas. Cada acerto sobe um degrau até R$ 1 milhão (de mentira).</li>
+      <li>As perguntas 5 e 10 são portos seguros: errando depois delas, você fica com o valor garantido.</li>
+      <li>Você pode parar a qualquer momento e levar o que já ganhou.</li>
+      <li>Quatro ajudas, uma vez cada: universitários, ligar para um amigo, plateia e eliminar duas alternativas. Na pergunta do milhão não há ajuda.</li>
+      <li>As ajudas são simuladas por sorteio e também erram, como na TV.</li>
+    </ul>
+  </div>
+  <button class="btn-ouro" id="btComecar">Começar</button>
+  <p class="status" id="vistas"></p>
+</section>
+
+<!-- ================= JOGO ================= -->
+<section id="jogo" class="wrap oculto">
+  <div class="topo">
+    <span class="tit">ENEM DO MILHÃO</span>
+    <span class="info" id="info" aria-live="polite"></span>
+    <button class="btn-linha" id="btSom" aria-pressed="true">Som: ligado</button>
+  </div>
+  <div class="grade">
+    <div>
+      <div class="cartao">
+        <div class="faixa"><b id="qRot"></b><span id="qArea"></span><button id="btZoom" aria-pressed="false">Ampliar</button></div>
+        <button class="apoio oculto" id="btApoio"></button>
+        <div class="rolagem" id="rolagem"><img id="qImg" alt=""></div>
+      </div>
+      <div class="mesa">
+        <div class="alts" id="alts" role="group" aria-label="Alternativas"></div>
+        <div class="confirma" id="confirma"></div>
+        <div class="ajudas">
+          <button class="ajuda" data-a="uni">🎓 Universitários</button>
+          <button class="ajuda" data-a="amigo">📞 Ligar para um amigo</button>
+          <button class="ajuda" data-a="plateia">👥 Plateia</button>
+          <button class="ajuda" data-a="elim">✂️ Eliminar duas</button>
+          <button class="ajuda parar" id="btParar">Parar e levar</button>
+        </div>
+        <p class="status" id="status" aria-live="polite"></p>
+      </div>
+    </div>
+    <aside class="escada" aria-label="Escada de prêmios"><h2>Prêmios</h2><ol id="escada"></ol></aside>
+  </div>
+</section>
+
+<!-- ================= FIM ================= -->
+<section id="fim" class="oculto">
+  <div class="marca"><small id="fimSub"></small><strong id="fimTit"></strong></div>
+  <p class="premio" id="fimPremio"></p>
+  <p id="fimTxt"></p>
+  <p><button class="btn-ouro" id="btDeNovo">Jogar de novo</button></p>
+  <div class="painel">
+    <h2>Conferência da rodada</h2>
+    <table><thead><tr><th>Nº</th><th>Questão</th><th>Sua resposta</th><th>Gabarito</th><th></th></tr></thead><tbody id="fimTab"></tbody></table>
+  </div>
+</section>
+
+<footer>
+  Fonte das questões: ENEM 2026, 1º dia (aplicado em 8/11/2026), Caderno 1 Azul, Inep/MEC, a partir da digitalização da prova.<br>
+  Gabarito: extraoficial. O gabarito oficial do Inep ainda não tinha sido conferido aqui. Página montada em 11/11/2026.<br>
+  As ajudas (universitários, amigo e plateia) são sorteios feitos no navegador;
+</footer>
+
+<dialog id="dlg"></dialog>
+<dialog id="dlgImg" class="largo"></dialog>
+
+<script>
+"use strict";
+/* ============ DADOS ============
+   Gabarito EXTRAOFICIAL (imagem "Veja o gabarito da Azul").
+   Para trocar pelo oficial do Inep, edite só as três linhas abaixo. */
+const GAB = {
+  I: "BAEDC",                    // inglês, questões 01 a 05
+  E: "AACBD",                    // espanhol, questões 01 a 05
+  N: "DBCABDBDABE" +             // 06 a 16
+     "EDBEABCCCECCEAAC" +        // 17 a 32
+     "ADCBABABCDEDECCC" +        // 33 a 48
+     "DEBEDDDEAECBAADC" +        // 49 a 64
+     "ABBAEAACDEDBEDAB" +        // 65 a 80
+     "DEECBEACAE"                // 81 a 90
+};
+const PREMIOS = [1e3,2e3,3e3,5e3,1e4,2e4,3e4,5e4,75e3,1e5,15e4,25e4,4e5,6e5,1e6];
+const SEGUROS = [4,9];           // índices das perguntas 5 e 10
+const LETRAS = ["A","B","C","D","E"];
+const APOIO = {                  // textos compartilhados por várias questões
+  T09:{de:9, ate:13, rot:"Ler o texto das questões 09 a 13"},
+  T46:{de:46,ate:50, rot:"Ler o texto das questões 46 a 50"}
+};
+const UNIS = [["Lia","Letras"],["Caio","História"],["Nina","Geografia"],["Téo","Ciências Sociais"],["Duda","Filosofia"],["Rafa","Artes"]];
+
+const $ = s => document.querySelector(s);
+const gab = id => id[0]==="I"||id[0]==="E" ? GAB[id[0]][+id.slice(1)-1] : GAB.N[+id-6];
+const areaDe = id => (id[0]==="I"||id[0]==="E"||+id<=45) ? "Linguagens" : "Ciências Humanas";
+const rotulo = id => id[0]==="I" ? "Questão 0"+id[1]+" (inglês)" : id[0]==="E" ? "Questão 0"+id[1]+" (espanhol)" : "Questão "+String(id).padStart(2,"0");
+const apoioDe = id => { const n=+id; for(const k in APOIO) if(n>=APOIO[k].de&&n<=APOIO[k].ate) return k; return null; };
+const reais = v => "R$ "+(v>=1e6 ? "1 milhão" : v>=1e3 ? (v/1e3)+" mil" : v);
+const sorteia = a => a[Math.floor(Math.random()*a.length)];
+const embaralha = a => { a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; };
+const espera = ms => new Promise(r=>setTimeout(r, RAPIDO ? Math.min(ms,30) : ms));
+const RAPIDO = /[?&]rapido/.test(location.search);   // usado só para testes
+
+/* ---------- memória leve (questões já vistas, som) ---------- */
+const mem = {
+  ler(k,p){ try{ const v=localStorage.getItem("enemMilhao."+k); return v==null?p:JSON.parse(v);}catch(e){return p;} },
+  gravar(k,v){ try{ localStorage.setItem("enemMilhao."+k, JSON.stringify(v)); }catch(e){} }
+};
+
+/* ---------- som (WebAudio, sem arquivos) ---------- */
+let somLigado = mem.ler("som", true), ctx = null;
+function bip(freqs, dur=0.14, tipo="triangle", vol=0.12){
+  if(!somLigado) return;
+  try{
+    ctx = ctx || new (window.AudioContext||window.webkitAudioContext)();
+    let t = ctx.currentTime;
+    freqs.forEach(f=>{ const o=ctx.createOscillator(), g=ctx.createGain();
+      o.type=tipo; o.frequency.value=f; g.gain.setValueAtTime(vol,t); g.gain.exponentialRampToValueAtTime(0.001,t+dur);
+      o.connect(g).connect(ctx.destination); o.start(t); o.stop(t+dur); t+=dur*0.9; });
+  }catch(e){}
+}
+const som = { clique:()=>bip([520],.07), suspense:()=>bip([110,104,98,92,87,82],.3,"sawtooth",.05),
+  certo:()=>bip([523,659,784,1047],.16), errado:()=>bip([330,262,196],.3,"square",.07), toque:()=>bip([880,0,880],.18,"sine",.08),
+  vitoria:()=>bip([523,659,784,1047,784,1047,1319],.2) };
+
+/* ---------- estado ---------- */
+let S = null;
+
+function montarRodada(){
+  const area = document.querySelector('input[name=area]:checked').value;
+  const lingua = document.querySelector('input[name=lingua]:checked').value;
+  let pool = [];
+  if(area.includes("L")){ for(let i=1;i<=5;i++) pool.push(lingua+i); for(let i=6;i<=45;i++) pool.push(String(i)); }
+  if(area.includes("H")){ for(let i=46;i<=90;i++) pool.push(String(i)); }
+  let vistas = mem.ler("vistas", []);
+  let novas = pool.filter(q=>!vistas.includes(q));
+  if(novas.length < 15){ vistas = vistas.filter(q=>!pool.includes(q)); novas = pool; }  // deu a volta: recomeça
+  const qs = embaralha(novas).slice(0,15);
+  S = { qs, i:0, usadas:{}, elim:[], sel:null, travado:false, resp:[], vistas,
+        amigo: ($("#amigo").value.trim() || "seu amigo") };
+}
+
+/* ---------- telas ---------- */
+function tela(id){ ["inicio","jogo","fim"].forEach(t=>$("#"+t).classList.toggle("oculto", t!==id)); window.scrollTo(0,0); }
+
+function desenharEscada(){
+  $("#escada").innerHTML = PREMIOS.map((v,k)=>
+    `<li class="${SEGUROS.includes(k)?"seguro ":""}${k<S.i?"feito ":""}${k===S.i?"atual":""}"${k===S.i?' aria-current="step"':""}><i>${k+1}</i>${reais(v)}</li>`).join("");
+  const at = $("#escada .atual"); if(at && at.scrollIntoView && window.innerWidth<=860) at.scrollIntoView({inline:"center",block:"nearest"});
+}
+
+function mostrarPergunta(){
+  const id = S.qs[S.i];
+  S.elim=[]; S.sel=null; S.travado=false;
+  $("#qRot").textContent = rotulo(id);
+  $("#qArea").textContent = areaDe(id);
+  const img = $("#qImg");
+  img.src = "q/"+id+".webp";
+  img.alt = rotulo(id)+": enunciado e alternativas de A a E, recortados da prova.";
+  const ap = apoioDe(id), bt = $("#btApoio");
+  bt.classList.toggle("oculto", !ap);
+  if(ap){ bt.textContent = "📄 "+APOIO[ap].rot; bt.onclick = ()=>verImagem("q/"+ap+".webp", APOIO[ap].rot.replace("Ler o t","T")); }
+  $("#info").innerHTML = `Pergunta <b>${S.i+1} de 15</b> · valendo <b>${reais(PREMIOS[S.i])}</b> · garantido: <b>${reais(garantido())}</b>`;
+  $("#alts").innerHTML = LETRAS.map(l=>`<button class="alt" data-l="${l}" aria-label="Alternativa ${l}"><span>${l}</span></button>`).join("");
+  $("#confirma").innerHTML = "<p class='nota' style='color:var(--suave)'>Leia a questão e escolha uma letra.</p>";
+  $("#status").textContent = S.i===14 ? "Pergunta do milhão: sem ajudas." : "";
+  atualizarAjudas(); desenharEscada();
+  $("#btParar").textContent = S.i>0 ? "Parar e levar "+reais(PREMIOS[S.i-1]) : "Desistir";
+  if(S.qs[S.i+1]){ const p=new Image(); p.src="q/"+S.qs[S.i+1]+".webp"; }   // adianta a próxima
+  $("#jogo").scrollIntoView({block:"start"});
+}
+const garantido = () => S.i>SEGUROS[1] ? PREMIOS[SEGUROS[1]] : S.i>SEGUROS[0] ? PREMIOS[SEGUROS[0]] : 0;
+
+function atualizarAjudas(){
+  document.querySelectorAll(".ajuda[data-a]").forEach(b=>{ b.disabled = !!S.usadas[b.dataset.a] || S.travado || S.i===14; });
+  $("#btParar").disabled = S.travado;
+}
+
+/* ---------- responder ---------- */
+$("#alts").addEventListener("click", e=>{
+  const b = e.target.closest(".alt"); if(!b || S.travado || b.disabled) return;
+  S.sel = b.dataset.l; som.clique();
+  document.querySelectorAll(".alt").forEach(x=>x.classList.toggle("sel", x===b));
+  $("#confirma").innerHTML = `<p>Letra ${S.sel}. É a resposta final?</p><button class="btn-ouro" id="btConf" style="padding:9px 22px;font-size:.95rem">Confirmar</button>`;
+  $("#btConf").onclick = confirmar;
+});
+
+async function confirmar(){
+  if(S.travado) return;
+  S.travado = true; atualizarAjudas();
+  const id = S.qs[S.i], certa = gab(id), acertou = S.sel===certa;
+  document.querySelectorAll(".alt").forEach(x=>x.disabled=true);
+  const bSel = document.querySelector(`.alt[data-l="${S.sel}"]`); bSel.classList.add("pisca");
+  $("#confirma").innerHTML = "<p>Valendo "+reais(PREMIOS[S.i])+"…</p>"; som.suspense();
+  await espera(1900);
+  bSel.classList.remove("pisca","sel");
+  document.querySelector(`.alt[data-l="${certa}"]`).classList.add("ok");
+  document.querySelector(`.alt[data-l="${certa}"] span`).textContent = certa+" ✓";
+  if(!acertou){ bSel.classList.add("bad"); bSel.querySelector("span").textContent = S.sel+" ✗"; }
+  S.resp.push({id, sua:S.sel, certa});
+  if(!S.vistas.includes(id)) S.vistas.push(id); mem.gravar("vistas", S.vistas);
+  if(acertou){
+    som.certo();
+    if(S.i===14){ $("#confirma").innerHTML = "<p>Resposta certa!</p>"; await espera(1300); return fim("vitoria"); }
+    const seg = SEGUROS.includes(S.i) ? " Porto seguro: "+reais(PREMIOS[S.i])+" garantidos." : "";
+    $("#confirma").innerHTML = `<p>Resposta certa! Você tem ${reais(PREMIOS[S.i])}.${seg}</p><button class="btn-ouro" id="btProx" style="padding:9px 22px;font-size:.95rem">Próxima pergunta</button>`;
+    $("#btProx").onclick = ()=>{ S.i++; mostrarPergunta(); };
+    $("#btProx").focus();
+  }else{
+    som.errado();
+    $("#confirma").innerHTML = `<p>Não foi dessa vez. O gabarito marca a letra ${certa}.</p><button class="btn-ouro" id="btFim" style="padding:9px 22px;font-size:.95rem">Ver resultado</button>`;
+    $("#btFim").onclick = ()=>fim("erro");
+    $("#btFim").focus();
+  }
+}
+
+$("#btParar").onclick = ()=>{
+  if(S.travado) return;
+  const v = S.i>0 ? PREMIOS[S.i-1] : 0;
+  abrir(`<h2>Parar agora?</h2><p>Você sai com <b>${reais(v)}</b> e a rodada termina.</p>
+    <div class="rodape"><button class="btn-linha" data-f>Continuar jogando</button><button class="btn-ouro" id="okParar" style="padding:9px 22px;font-size:.95rem">Parar</button></div>`);
+  $("#okParar").onclick = ()=>{ fechar(); fim("parou"); };
+};
+
+/* ---------- janelas ---------- */
+const dlg = $("#dlg"), dlgImg = $("#dlgImg");
+function abrir(html){ dlg.innerHTML = html; if(!dlg.open) dlg.showModal(); }
+function fechar(){ if(dlg.open) dlg.close(); }
+dlg.addEventListener("click", e=>{ if(e.target.closest("[data-f]")) fechar(); });
+dlg.addEventListener("cancel", e=>{ if(dlg.dataset.preso) e.preventDefault(); });
+function verImagem(src, titulo){
+  dlgImg.innerHTML = `<h2>${titulo}</h2><img src="${src}" alt="${titulo}"><div class="rodape"><button class="btn-linha" style="background:#1b2468">Fechar</button></div>`;
+  dlgImg.showModal(); dlgImg.scrollTop = 0;
+  dlgImg.querySelector("button").onclick = ()=>dlgImg.close();
+}
+
+/* ---------- ajudas ----------
+   Chance de acerto cai um pouco a cada degrau, para a ajuda valer menos perto do milhão. */
+const vivas = () => LETRAS.filter(l=>!S.elim.includes(l));
+function palpite(pAcerto){
+  const certa = gab(S.qs[S.i]);
+  if(Math.random() < pAcerto) return certa;
+  return sorteia(vivas().filter(l=>l!==certa));
+}
+function usar(a){ S.usadas[a]=true; atualizarAjudas(); }
+
+document.querySelector(".ajudas").addEventListener("click", e=>{
+  const b = e.target.closest(".ajuda[data-a]"); if(!b || b.disabled) return;
+  ({uni:ajudaUni, amigo:ajudaAmigo, plateia:ajudaPlateia, elim:ajudaElim})[b.dataset.a]();
+});
+
+async function ajudaUni(){
+  usar("uni");
+  const tres = embaralha(UNIS).slice(0,3), p = 0.74 - S.i*0.02;
+  const votos = tres.map(()=>palpite(p));
+  dlg.dataset.preso = "1";
+  abrir(`<h2>🎓 Ajuda dos universitários</h2><p>Três estudantes leram a questão. Cada um levanta a placa com a sua resposta.</p>
+    <div class="unis">${tres.map((u,k)=>`<div class="uni"><div class="rosto">${u[0][0]}</div><b>${u[0]}</b><small>${u[1]}</small><div class="placa" id="pl${k}">?</div></div>`).join("")}</div>
+    <p id="uniRes" aria-live="polite">Pensando…</p>
+    <p class="nota">Simulação: as respostas são sorteadas e podem estar erradas.</p>
+    <div class="rodape"><button class="btn-ouro" data-f id="uniOk" disabled style="padding:9px 22px;font-size:.95rem">Voltar à pergunta</button></div>`);
+  for(let k=0;k<3;k++){ await espera(1100); const el=$("#pl"+k); el.textContent=votos[k]; el.classList.add("sobe"); som.clique(); }
+  const cont = {}; votos.forEach(v=>cont[v]=(cont[v]||0)+1);
+  const ord = Object.entries(cont).sort((a,b)=>b[1]-a[1]);
+  $("#uniRes").textContent = ord[0][1]===3 ? `Os três foram na letra ${ord[0][0]}.` :
+    ord[0][1]===2 ? `Dois foram na letra ${ord[0][0]} e um na ${ord[1][0]}.` : `Cada um foi numa letra: ${votos.join(", ")}. Eles não se entenderam.`;
+  delete dlg.dataset.preso; $("#uniOk").disabled=false; $("#uniOk").focus();
+  $("#status").textContent = "Universitários: "+votos.join(", ")+".";
+}
+
+async function ajudaAmigo(){
+  usar("amigo");
+  const nome = S.amigo, Nome = nome[0].toUpperCase()+nome.slice(1);
+  const seguro = Math.random() < 0.7 - S.i*0.02;
+  const certa = gab(S.qs[S.i]);
+  let falas, resumo;
+  if(seguro){
+    const l = palpite(0.88);
+    falas = [["eu","Oi! Tô no jogo e preciso de você. Tenho 30 segundos. Vou ler a questão…"],
+             ["el",sorteia(["Calma, lê devagar.","Eita, valendo quanto? Tá, pode ler.","Opa, manda."])],
+             ["el",sorteia(["Hmm… essa eu acho que sei.","Peraí, já vi algo parecido."])],
+             ["el",`Vai na letra ${l}. ${sorteia(["Tenho uns 80% de certeza.","Tô bem confiante.","Pode marcar, eu marcaria."])}`]];
+    resumo = `${Nome} indicou a letra ${l}, com confiança.`;
+  }else{
+    const outras = vivas().filter(x=>x!==certa);
+    const par = Math.random()<0.75 ? embaralha([certa, sorteia(outras)]) : embaralha(outras).slice(0,2);
+    falas = [["eu","Oi! Tô no jogo e preciso de você. Tenho 30 segundos. Vou ler a questão…"],
+             ["el",sorteia(["Nossa, que texto comprido.","Ih, essa é difícil."])],
+             ["el",`Olha, não tenho certeza. Fico entre ${par[0]} e ${par[1]}.`],
+             ["el",sorteia(["Não me xinga se der errado, tá?","Se eu fosse você, usava outra ajuda também."])]];
+    resumo = `${Nome} ficou entre ${par[0]} e ${par[1]}, sem certeza.`;
+  }
+  dlg.dataset.preso = "1";
+  abrir(`<h2>📞 Ligando para ${nome}</h2>
+    <div class="fone"><div class="ico toca" id="fIco">📞</div><div><b id="fEst">Chamando…</b><br><span class="nota" id="fSeg">30 segundos de conversa</span></div></div>
+    <div class="tempo"><div id="fBar"></div></div>
+    <div class="falas" id="falas" aria-live="polite"></div>
+    <p class="nota">Simulação: ninguém é chamado de verdade e o palpite pode estar errado.</p>
+    <div class="rodape"><button class="btn-ouro" data-f id="fOk" disabled style="padding:9px 22px;font-size:.95rem">Voltar à pergunta</button></div>`);
+  som.toque(); await espera(1200); som.toque(); await espera(1200);
+  $("#fIco").classList.remove("toca"); $("#fEst").textContent = Nome+" atendeu";
+  const total = 30, ini = Date.now(), passo = RAPIDO ? 10 : 2600;
+  const tic = setInterval(()=>{ const r=Math.max(0,total-(Date.now()-ini)/1000);
+    if($("#fBar")) $("#fBar").style.transform=`scaleX(${r/total})`; if($("#fSeg")) $("#fSeg").textContent=Math.ceil(r)+" s restantes"; }, 200);
+  for(const [q,t] of falas){ await espera(passo); const d=document.createElement("div"); d.className="fala "+q; d.textContent=t; $("#falas").appendChild(d); som.clique(); }
+  await espera(900); clearInterval(tic);
+  $("#fEst").textContent = "Ligação encerrada"; $("#fSeg").textContent = resumo;
+  delete dlg.dataset.preso; $("#fOk").disabled=false; $("#fOk").focus();
+  $("#status").textContent = resumo;
+}
+
+async function ajudaPlateia(){
+  usar("plateia");
+  const certa = gab(S.qs[S.i]), v = vivas();
+  const forca = Math.random() < 0.8 - S.i*0.02;        // a plateia acerta na maioria das vezes
+  const lider = forca ? certa : sorteia(v.filter(l=>l!==certa));
+  let pesos = v.map(l=> l===lider ? 38+Math.random()*25 : 6+Math.random()*20);
+  const soma = pesos.reduce((a,b)=>a+b,0);
+  let pct = pesos.map(p=>Math.round(p/soma*100)); pct[v.indexOf(lider)] += 100 - pct.reduce((a,b)=>a+b,0);
+  const mapa = {}; v.forEach((l,k)=>mapa[l]=pct[k]);
+  abrir(`<h2>👥 Opinião da plateia</h2><p>A plateia votou pelo teclado.</p>
+    <div class="barras">${LETRAS.map(l=>`<div class="barra ${l in mapa?"":"fora"}"><span>${l in mapa?mapa[l]+"%":"–"}</span><div class="col" data-h="${mapa[l]||0}"></div><b>${l}</b></div>`).join("")}</div>
+    <p class="nota">Simulação: os percentuais são sorteados. Plateia também erra.</p>
+    <div class="rodape"><button class="btn-ouro" data-f style="padding:9px 22px;font-size:.95rem">Voltar à pergunta</button></div>`);
+  await espera(80);
+  dlg.querySelectorAll(".col").forEach(c=>c.style.height = (c.dataset.h*1.9)+"px");
+  $("#status").textContent = "Plateia: "+v.map(l=>l+" "+mapa[l]+"%").join(" · ");
+}
+
+function ajudaElim(){
+  usar("elim");
+  const certa = gab(S.qs[S.i]);
+  const fora = embaralha(LETRAS.filter(l=>l!==certa && l!==S.sel)).slice(0,2);
+  S.elim = fora; som.clique();
+  fora.forEach(l=>{ const b=document.querySelector(`.alt[data-l="${l}"]`); b.classList.add("out"); b.disabled=true; b.setAttribute("aria-label","Alternativa "+l+" eliminada"); });
+  $("#status").textContent = `Eliminadas as alternativas ${fora.sort().join(" e ")}.`;
+}
+
+/* ---------- fim de rodada ---------- */
+function fim(motivo){
+  const acertos = S.resp.filter(r=>r.sua===r.certa).length;
+  let valor, tit, sub, txt;
+  if(motivo==="vitoria"){ valor=1e6; sub="15 de 15"; tit="UM MILHÃO!"; txt="Você acertou as 15 perguntas."; som.vitoria(); }
+  else if(motivo==="parou"){ valor = S.i>0?PREMIOS[S.i-1]:0; sub="Você parou"; tit="FIM DA RODADA"; txt=`Parou na pergunta ${S.i+1}, com ${acertos} acerto${acertos===1?"":"s"}.`; }
+  else { valor = garantido(); sub="Errou a pergunta "+(S.i+1); tit="FIM DA RODADA"; txt = `Foram ${acertos} acerto${acertos===1?"":"s"}. `+(valor?"Você fica com o valor do porto seguro.":"Sem porto seguro ainda, o prêmio zera."); }
+  $("#fimSub").textContent=sub; $("#fimTit").innerHTML=tit; $("#fimPremio").textContent=reais(valor); $("#fimTxt").textContent=txt;
+  $("#fimTab").innerHTML = S.resp.map((r,k)=>`<tr><td>${k+1}</td><td>${rotulo(r.id)}</td>
+    <td class="${r.sua===r.certa?"certo":"errado"}">${r.sua} ${r.sua===r.certa?"✓ certa":"✗ errada"}</td><td>${r.certa}</td>
+    <td><button class="btn-linha" data-q="${r.id}">Rever</button></td></tr>`).join("") || `<tr><td colspan="5">Nenhuma pergunta respondida.</td></tr>`;
+  tela("fim");
+}
+$("#fimTab").addEventListener("click", e=>{ const b=e.target.closest("[data-q]"); if(b) verImagem("q/"+b.dataset.q+".webp", rotulo(b.dataset.q)+" · gabarito: "+gab(b.dataset.q)); });
+
+/* ---------- botões gerais ---------- */
+function comecar(){ montarRodada(); tela("jogo"); mostrarPergunta(); }
+$("#btComecar").onclick = comecar;
+$("#btDeNovo").onclick = ()=>{ tela("inicio"); contarVistas(); };
+$("#btZoom").onclick = ()=>{ const z=$("#rolagem").classList.toggle("zoom"); $("#btZoom").textContent = z?"Reduzir":"Ampliar"; $("#btZoom").setAttribute("aria-pressed",z); };
+function pintarSom(){ $("#btSom").textContent = "Som: "+(somLigado?"ligado":"desligado"); $("#btSom").setAttribute("aria-pressed",somLigado); }
+$("#btSom").onclick = ()=>{ somLigado=!somLigado; mem.gravar("som",somLigado); pintarSom(); };
+function contarVistas(){ const n = mem.ler("vistas",[]).length; $("#vistas").textContent = n ? `Você já respondeu ${n} das 95 questões neste navegador. As rodadas dão preferência às que faltam.` : ""; }
+pintarSom(); contarVistas();
+</script>
+</body>
+</html>
